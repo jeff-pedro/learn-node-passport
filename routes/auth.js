@@ -1,4 +1,10 @@
+const crypto = require('crypto');
+
 const express = require('express');
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
+
+const db = require('../db');
 
 const router = express.Router();
 
