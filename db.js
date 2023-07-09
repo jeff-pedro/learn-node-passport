@@ -36,7 +36,7 @@ db.serialize(function() {
   // create an initial user (username: alice, password: letmein)
   var salt = crypto.randomBytes(16);
   db.run('INSERT OR IGNORE INTO users (username, hashed_password, salt) VALUES (?, ?, ?)', [
-    'alice',
+    'jefferson',
     crypto.pbkdf2Sync('letmein', salt, 310000, 32, 'sha256'),
     salt
   ]);
