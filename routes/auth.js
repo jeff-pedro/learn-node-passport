@@ -59,4 +59,32 @@ router.get('/signup', (req, res, next) => {
     res.render('signup');
 });
 
+router.post('/signup', (req, res, next) => {
+    const { username, password } = req.body;
+
+    const salt = crypto.randomBytes(16);      
+
+    crypto.pbkdf2(password, salt, 31000, 32, 'sha256', (err, hashedPassword) => {
+        if (err) { return next(err); }
+
+        db.run('INSERT INTO users (username, hashed_password, salt) VALUES (?, ?, ?)', [
+            username,
+            hashedPassword,
+            salt
+        ], function (err) {
+            if (err) { return next(err); }
+            
+            const user = {
+                id: this.lastID,
+                username: username
+            }
+            
+            req.login(user, (err) => {
+                if (err) { return next(err); }
+                res.redirect('/')
+            });
+        });
+    });
+});
+
 module.exports = router;
