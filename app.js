@@ -8,7 +8,7 @@ var logger = require('morgan');
 const passport = require('passport');
 const session = require('express-session');
 
-const SQLiteStore = require('connect-sqlite3');
+const SQLiteStore = require('connect-sqlite3')(session);
 
 var indexRouter = require('./routes/index');
 var authRouter = require('./routes/auth');

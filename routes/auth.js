@@ -17,14 +17,26 @@ passport.use(new LocalStrategy((username, password, cb) => {
         crypto.pbkdf2(password, row.salt, 310000, 32, 'sha256', (err, hashedPassword) => {
             if (err) { return cb(err) };
         
-            if (!crypto.timingSafeEqual(row.hashedPassword, hashedPassword)) { 
+            if (!crypto.timingSafeEqual(row.hashed_password, hashedPassword)) { 
                 return cb(null, false, { message: 'Incorrect username or password.' })
             };
+            
+            return cb(null, row);
         });
-
-        return cb(null, row);
     });
 }));
+
+passport.serializeUser((user, cb) => {
+    process.nextTick(() => {
+        cb(null, { id: user.id, username: user.username });     
+    });
+});
+
+passport.deserializeUser((user, cb) => {
+    process.nextTick(() => {
+        return cb(null, user);     
+    });
+});
 
 router.get('/login', (req, res, next) => {
     res.render('login');
